@@ -1,0 +1,50 @@
+networks:
+  startitup-cloud:
+    driver: bridge
+
+services:
+  startitup-cloud-php:
+    build:
+      context: ./images/php-84
+      dockerfile: Dockerfile
+    container_name: startitup-cloud-php
+    restart: unless-stopped
+    volumes:
+      - ./www:/var/www/html
+      - ./migrations:/var/www/migrations
+    networks:
+      - startitup-cloud
+    depends_on:
+      - startitup-cloud-db
+
+
+  startitup-cloud-nginx:
+    image: nginx:latest
+    container_name: startitup-cloud-nginx
+    restart: unless-stopped
+    ports:
+      - "8855:80"
+    volumes:
+      - ./www:/var/www/html
+      - ./images/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - startitup-cloud
+    depends_on:
+      - startitup-cloud-php
+
+  startitup-cloud-db:
+    image: mariadb:latest
+    container_name: startitup-cloud-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: startitup
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+    networks:
+      - startitup-cloud
+
+volumes:
+  db_data:

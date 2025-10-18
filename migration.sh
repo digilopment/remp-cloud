@@ -1,0 +1,1 @@
+docker exec -it startitup-cloud-php php /var/www/migrations/$1.php

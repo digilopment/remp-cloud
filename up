@@ -1,0 +1,23 @@
+#!/bin/bash
+# cleanup + start script pre startitup-cloud
+
+docker compose down
+
+containers=$(docker ps -a --filter "name=^startitup-" --format "{{.ID}}")
+if [ -n "$containers" ]; then
+    echo "Odstraňujem staré kontajnery s prefixom 'startitup-'..."
+    docker rm -f $containers
+else
+    echo "Žiadne staré kontajnery s prefixom 'startitup-' neexistujú."
+fi
+
+# 3 spusti Docker Compose
+echo "Spúšťam Docker Compose..."
+docker compose build
+
+if [ "$1" == "-d" ]; then
+    docker compose up -d
+    echo "Docker Compose beží na pozadí."
+else
+    docker compose up
+fi

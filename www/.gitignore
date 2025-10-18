@@ -1,0 +1,55 @@
+!/wp-content/themes/startitup
+
+# WordPress Core
+/wp-admin/
+/wp-includes/
+/wp-content/upgrade/
+/wp-content/backups/
+
+# Uploads (media files)
+wp-content/uploads/
+wp-content/wflogs/
+wp-content/cache/
+wp-content/backups/
+
+# Plugins a themes (ak nie sú verzované, ignoruj vendor)
+/wp-content/plugins/*/
+/wp-content/themes/*/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.log
+
+# Ignore environment files
+.env
+*.env
+wp-config.php
+
+# Ignore IDE/editor files
+*.sublime-workspace
+*.sublime-project
+*.idea/
+*.vscode/
+
+# Node / npm / yarn
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Composer
+vendor/
+composer.lock
+
+# OS generated files
+.DS_Store
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.orig
