@@ -19,3 +19,5 @@ bash migration.sh products
 bash migration.sh posts
 bash migration.sh settings
 bash migration.sh woocommerceSettings
+
+bash wp.sh "wp theme activate startitup --allow-root"
