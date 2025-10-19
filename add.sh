@@ -18,7 +18,7 @@ add() {
     fi
 
     docker exec -u root -it startitup-cloud-php bash -c "
-        cd /var/www/html && \
+        cd /var/www/html/wordpress && \
         wp ${type} install '${install_target}' --activate --allow-root
     "
 }

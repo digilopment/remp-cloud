@@ -1,5 +1,5 @@
 docker compose down
-sudo rm -rf volumes/* www/* 
+sudo rm -rf volumes/*
 
 bash up -d
 sleep 15
@@ -9,6 +9,7 @@ cd setup
 bash init.sh
 bash install.sh
 bash pluginsAndThemes.sh
+bash symlinks.sh
 
 #migrations
 cd ../

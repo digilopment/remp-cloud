@@ -1,1 +1,1 @@
-docker exec -it startitup-cloud-php php /var/www/migrations/$1.php
+docker exec -it startitup-cloud-php php /var/www/html/migrations/$1.php

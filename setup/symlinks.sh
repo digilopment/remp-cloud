@@ -1,16 +1,25 @@
 #!/bin/bash
-set -e
 
-cd ../
-bash add.sh theme storefront
-bash add.sh theme blocksy
-bash add.sh plugin woocommerce
+# Základná cesta k témam
+src_base="../../../themes/"
+dest_base="../www/wordpress/wp-content/themes"
 
-bash wp.sh "wp language core install sk_SK --allow-root"
-bash wp.sh "wp language core activate sk_SK --allow-root"
-bash wp.sh "wp plugin install woocommerce --activate --allow-root"
-bash wp.sh "wp language plugin install woocommerce sk_SK --allow-root"
-bash wp.sh "wp plugin install generate-child-theme --activate --allow-root"
+# Načítanie všetkých tém
+for source in ../www/themes/*; do
+    # Skontroluj, či je to priečinok
+    [ -d "$source" ] || continue
 
-#bash add.sh plugin https://downloads.wordpress.org/plugin/woocommerce-services.latest-stable.zip
-#bash add.sh plugin https://downloads.wordpress.org/plugin/woocommerce-payments.latest-stable.zip
+    # Zisti názov témy
+    theme=$(basename "$source")
+    dest="$dest_base/$theme"
+    source="$src_base$theme"
+
+    # Vymaž existujúce linky/priečinok
+    if [ -L "$dest" ] || [ -d "$dest" ]; then
+        rm -rf "$dest"
+    fi
+
+    # Vytvor symbolický link
+    ln -s "$source" "$dest"
+    echo "Symbolický link vytvorený: $dest -> $source"
+done

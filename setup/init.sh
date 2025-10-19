@@ -2,13 +2,14 @@
 set -e
 cd ../
 # --- Konfigurácia ---
-WWW_DIR="./www"
+WWW_DIR="./www/wordpress"
 DB_NAME="startitup"
 DB_USER="root"
 DB_PASS="root"
 DB_HOST="startitup-cloud-db"
 
 # --- Vytvorenie www, ak neexistuje ---
+rm -rf "$WWW_DIR"
 mkdir -p "$WWW_DIR"
 cd "$WWW_DIR"
 
@@ -34,4 +35,4 @@ sed -i "s/localhost/$DB_HOST/" wp-config.php
 echo "WordPress pripravený v $WWW_DIR"
 
 mkdir -p wp-content/uploads/wc-logs
-chmod -R 0777 wp-content
+chmod -R 0777 ../wordpress

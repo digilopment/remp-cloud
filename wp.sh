@@ -10,7 +10,7 @@ wp() {
     fi
 
     docker exec -it startitup-cloud-php bash -c "
-    cd /var/www/html && \
+    cd /var/www/html/wordpress && \
     $cmd
     "
 }
