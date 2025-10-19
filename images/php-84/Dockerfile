@@ -1,4 +1,4 @@
-# startitup-cloud/php/Dockerfile
+# wordpress-cloud/php/Dockerfile
 FROM php:8.4-fpm
 
 # Install required system dependencies

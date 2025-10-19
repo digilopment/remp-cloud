@@ -36,10 +36,10 @@ function add_user($login, $password, $email = '', $role = 'administrator')
 
 // --- Príklad použitia ---
 //roles: administrator,editor,author,contributor,subscriber
-add_user('admin', 'admin');                          // hlavný admin
-add_user('root', 'root');                            // ďalší admin
-add_user('editor', 'editor', 'editor@domain.com', 'editor'); // editor
-add_user('author', 'author', 'author@domain.com', 'author');        // author
-add_user('contributor', 'contributor', 'contributor@domain.com', 'contributor');   // contributor
-add_user('subscriber', 'subscriber', 'subscriber@domain.com', 'subscriber');    // subscriber
+add_user(getenv('DEFAULT_USER'), getenv('DEFAULT_PASSWORD'), getenv('DEFAULT_EMAIL'), 'administrator'); // hlavný admin
+//add_user('root', 'root');                            // ďalší admin
+//add_user('editor', 'editor', 'editor@domain.com', 'editor'); // editor
+//add_user('author', 'author', 'author@domain.com', 'author');        // author
+//add_user('contributor', 'contributor', 'contributor@domain.com', 'contributor');   // contributor
+//add_user('subscriber', 'subscriber', 'subscriber@domain.com', 'subscriber');    // subscriber
 

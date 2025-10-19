@@ -1,10 +1,18 @@
 #!/bin/bash
 set -e
 
-docker exec -u root -it startitup-cloud-php bash -c "cd /var/www/html/wordpress && wp core install \
-  --url='http://localhost:8855' \
-  --title='Startitup' \
-  --admin_user='admin' \
-  --admin_password='admin' \
-  --admin_email='admin@admin.loc' \
+if [ -e ../.env ]; then
+    . ../.env
+else
+    . ../.env.dev
+fi
+
+
+docker exec -u root -it wordpress-cloud-php bash -c "cd /var/www/html/wordpress && wp core install \
+  --url='${DOMAIN}' \
+  --title='$TITLE' \
+  --admin_user='$DEFAULT_USER' \
+  --admin_password='$DEFAULT_PASSWORD' \
+  --admin_email='$DEFAULT_EMAIL' \
   --allow-root"
+

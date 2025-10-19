@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -e ../.env ]; then
+    . ../.env
+else
+    . ../.env.dev
+fi
+
 # Základná cesta k témam
 src_base="../../../themes/"
 dest_base="../www/wordpress/wp-content/themes"

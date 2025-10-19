@@ -7,8 +7,8 @@ if (function_exists('wc_create_pages')) {
 }
 
 // --- Nastavenie základných možností ---
-update_option('woocommerce_default_country', 'SK');
-update_option('woocommerce_currency', 'EUR');
+update_option('woocommerce_default_country', getenv('COUNTRY'));
+update_option('woocommerce_currency', getenv('CURRENCY'));
 update_option('woocommerce_currency_pos', 'right_space');
 update_option('woocommerce_price_thousand_sep', ' ');
 update_option('woocommerce_price_decimal_sep', ',');
@@ -52,9 +52,9 @@ wp_cache_flush();
 
 // --- Nastavenie permalinkov pre produkty na /shop/%product_cat%/ ---
 $permalink_settings = get_option('woocommerce_permalinks', []);
-$permalink_settings['product_base']  = '/shop/%product_cat%';
+$permalink_settings['product_base']  = getenv('PERMALINK_WC_STRUCTURE');
 $permalink_settings['category_base'] = 'shop';
-update_option('woocommerce_permalinks', $permalink_settings);
+update_option('woocommerce_permalinks', $permalink_settings); 
 
 // Prepíš rewrite pravidlá
 global $wp_rewrite;

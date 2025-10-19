@@ -6,18 +6,23 @@ echo "=== Migrácia nastavení stránky ===\n";
 
 // --- Konfigurácia ---
 $settings = [
-    'blogname'           => 'Startitup',
-    'blogdescription'    => 'Slovenský online magazín o technológiách, startupoch a biznise',
-    'siteurl'            => 'http://localhost:8855',
-    'home'               => 'http://localhost:8855',
-    'admin_email'        => 'info@startitup.sk',
-    'timezone_string'    => 'Europe/Bratislava',
-    'date_format'        => 'j. F Y',
-    'time_format'        => 'H:i',
-    'start_of_week'      => 1,
-    'WPLANG'             => 'sk_SK',
-    'default_category'   => 1,
-    'permalink_structure'=> '/blog/%category%/%post_id%-%postname%/',
+    'blogname'           => getenv('TITLE'),
+    'blogdescription'    => getenv('DESCRIPTION'),
+    'siteurl'            => getenv('DOMAIN'),
+    'home'               => getenv('DOMAIN'),
+    'admin_email'        => getenv('ADMIN_EMAIL'),
+    'timezone_string'    => getenv('TIMEZONE_STRING'),
+    'date_format'        => getenv('DATE_FORMAT'),
+    'time_format'        => getenv('TIME_FORMAT'),
+    'start_of_week'      => getenv('START_OF_WEEK'),
+    'WPLANG'             => getenv('LOCALE'),
+    'default_category'   => getenv('DEFAULT_CATEGORY'),
+    'permalink_structure'=> getenv('PERMALINK_STRUCTURE'),
+    'mailserver_url' => getenv('MAILSERVER_URL'),
+    'mailserver_login' => getenv('MAILSERVER_LOGIN'),
+    'mailserver_pass' => getenv('MAILSERVER_PASS'),
+    'mailserver_port' => getenv('MAILSERVER_PORT'),
+    'ping_sites' => '',
 ];
 
 // --- Uloženie základných WP options ---
@@ -49,7 +54,7 @@ function upload_media($url, $desc = '') {
 }
 
 // --- Logo ---
-$logo_url = 'https://dummyimage.com/400x100/ff6600/ffffff.png&text=Startitup';
+$logo_url = 'https://dummyimage.com/400x100/ff6600/ffffff.png&text=' . getenv('TITLE');
 $logo_id = upload_media($logo_url, 'Site Logo');
 if ($logo_id) {
     set_theme_mod('custom_logo', $logo_id);
@@ -65,17 +70,17 @@ if ($favicon_id) {
 }
 
 // --- Reading / Writing defaults ---
-update_option('show_on_front', 'posts');
-update_option('posts_per_page', 10);
+//update_option('show_on_front', 'posts');
+update_option('posts_per_page', 12);
 update_option('default_comment_status', 'closed');
 update_option('default_ping_status', 'closed');
 add_filter('locale', function($locale){
-    return 'sk_SK';
+    return getenv('LOCALE');
 });
 // --- Nastavenie rewrite rules pre blog štruktúru ---
 global $wp_rewrite;
 $wp_rewrite->set_permalink_structure($settings['permalink_structure']);
-$wp_rewrite->category_base = 'blog';
+//$wp_rewrite->category_base = 'blog';
 $wp_rewrite->flush_rules(false);
 
-echo "=== Migrácia hotová. Nastavenia webu boli inicializované pre Startitup ===\n";
+echo "=== Migrácia hotová. Nastavenia webu boli inicializované pre ". getenv('TITLE') ." ===\n";

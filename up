@@ -1,14 +1,14 @@
 #!/bin/bash
-# cleanup + start script pre startitup-cloud
+# cleanup + start script pre wordpress
 
 docker compose down
 
-containers=$(docker ps -a --filter "name=^startitup-" --format "{{.ID}}")
+containers=$(docker ps -a --filter "name=^wordpress-" --format "{{.ID}}")
 if [ -n "$containers" ]; then
-    echo "Odstraňujem staré kontajnery s prefixom 'startitup-'..."
+    echo "Odstraňujem staré kontajnery s prefixom 'wordpress-'..."
     docker rm -f $containers
 else
-    echo "Žiadne staré kontajnery s prefixom 'startitup-' neexistujú."
+    echo "Žiadne staré kontajnery s prefixom 'wordpress-' neexistujú."
 fi
 
 # 3 spusti Docker Compose

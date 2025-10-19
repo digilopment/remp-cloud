@@ -4,7 +4,7 @@ require_once __DIR__ . '/autoload.php';
 // --- Struktúra stránok: [názov => [obsah, podradené stránky]] ---
 $pages = [
     "O nás" => [
-        "content" => "Startitup je slovenský online magazín o technológiách, startupoch, biznise a lifestyle. Prinášame aktuálne správy, rozhovory a recenzie.",
+        "content" => getenv('TITLE') . " je slovenský online magazín o technológiách, startupoch, biznise a lifestyle. Prinášame aktuálne správy, rozhovory a recenzie.",
         "children" => [
             "Redakcia" => "Náš tím tvoria novinári, technologickí nadšenci a odborníci na biznis spravodajstvo.",
             "Naša misia" => "Poskytovať rýchle, relevantné a zrozumiteľné informácie zo sveta technológií a startupov.",
@@ -14,7 +14,7 @@ $pages = [
         "content" => "Kontaktujte nás pre spoluprácu, PR alebo otázky týkajúce sa obsahu.",
         "children" => [
             "Kontaktný formulár" => "Pre rýchle otázky využite náš online kontaktný formulár.",
-            "Redakcia" => "info@startitup.sk"
+            "Redakcia" => "info@" . getenv('SELECTED_THEME') . ".sk"
         ]
     ],
     "Ochrana osobných údajov" => [

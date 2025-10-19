@@ -13,5 +13,5 @@ if [ -z "$1" ]; then
     echo "Use: bash $0 <migration>"
     exit 1
 else
-    docker exec -it startitup-cloud-php php /var/www/html/migrations/"$1".php
+    docker exec -it wordpress-cloud-php php /var/www/html/migrations/"$1".php
 fi

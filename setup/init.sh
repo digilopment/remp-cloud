@@ -1,15 +1,10 @@
 #!/bin/bash
-set -e
-cd ../
-# --- Konfigurácia ---
-WWW_DIR="./www/wordpress"
-DB_NAME="startitup"
-DB_USER="root"
-DB_PASS="root"
-DB_HOST="startitup-cloud-db"
 
-# --- Vytvorenie www, ak neexistuje ---
-rm -rf "$WWW_DIR"
+. ../.env
+
+cd ../
+
+rm -rf $WWW_DIR
 mkdir -p "$WWW_DIR"
 cd "$WWW_DIR"
 

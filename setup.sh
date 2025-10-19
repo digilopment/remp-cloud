@@ -1,3 +1,7 @@
+#!/bin/bash
+
+. ./.env
+
 docker compose down
 sudo rm -rf volumes/*
 
@@ -20,4 +24,4 @@ bash migration.sh posts
 bash migration.sh settings
 bash migration.sh woocommerceSettings
 
-bash wp.sh "wp theme activate startitup --allow-root"
+bash wp.sh "wp theme activate $SELECTED_THEME --allow-root"

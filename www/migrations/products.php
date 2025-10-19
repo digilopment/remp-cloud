@@ -70,7 +70,7 @@ function random_text($length = 250) {
 
 // --- Funkcia na pridanie nahodneho image ---
 function attach_random_image($post_id){
-    $image_url = "https://dummyimage.com/800x520/eeeeee/111111.jpg&text=Startitup+" . rand(1,10000);
+    $image_url = "https://dummyimage.com/800x520/eeeeee/111111.jpg&text=". getenv('TITLE') ."+" . rand(1,10000);
     require_once(ABSPATH . 'wp-admin/includes/file.php');
     require_once(ABSPATH . 'wp-admin/includes/media.php');
     require_once(ABSPATH . 'wp-admin/includes/image.php');
@@ -83,7 +83,7 @@ function attach_random_image($post_id){
 
 // --- Vytvor produkty ---
 for($i=1;$i<=$product_count;$i++){
-    $name = "Startitup Produkt $i";
+    $name = getenv('TITLE') ." Produkt $i";
     $price = rand(5,49) . ".00";
     $stock = rand(1,50);
     $desc = random_text($desc_length);
@@ -113,4 +113,4 @@ for($i=1;$i<=$product_count;$i++){
     }
 }
 flush_rewrite_rules(false);
-echo "Migracia hotova, $product_count produktov pre Startitup importovanych s nahodnymi obrazkami.\n";
+echo "Migracia hotova, $product_count produktov pre ". getenv('TITLE') ." importovanych s nahodnymi obrazkami.\n";

@@ -110,7 +110,7 @@ if($blog_page_id){
 // --- Nastavenie permalink štruktúry na /blog/{kategoria}/{post} ---
 function custom_blog_permalinks() {
     global $wp_rewrite;
-    $wp_rewrite->set_permalink_structure('/blog/%category%/%postname%/');
+    $wp_rewrite->set_permalink_structure(getenv('PERMALINK_STRUCTURE'));
     $wp_rewrite->category_base = 'blog';
     $wp_rewrite->flush_rules(false);
 }
