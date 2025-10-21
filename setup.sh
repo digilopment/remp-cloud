@@ -12,8 +12,8 @@ sleep 15
 cd setup
 bash init.sh
 bash install.sh
-bash pluginsAndThemes.sh
 bash symlinks.sh
+bash pluginsAndThemes.sh
 
 #migrations
 cd ../
