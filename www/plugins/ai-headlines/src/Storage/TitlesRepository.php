@@ -7,7 +7,7 @@ use wpdb;
 class TitlesRepository
 {
 
-    private const TABLE_NAME = 'ai_title_suggestions';
+    private const TABLE_NAME = 'ai_headlines_suggestions';
 
     private wpdb $wpdb;
 
@@ -38,6 +38,13 @@ class TitlesRepository
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
+    }
+
+    public static function dropTable(): void
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . self::TABLE_NAME;
+        $wpdb->query("DROP TABLE IF EXISTS {$table}");
     }
 
     public function getByPostId(int $postId): ?object

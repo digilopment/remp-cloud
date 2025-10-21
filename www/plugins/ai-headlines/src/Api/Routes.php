@@ -2,16 +2,19 @@
 
 namespace AiHeadlines\Api;
 
-use AiHeadlines\API\OpenAIClient;
+use AiHeadlines\Api\OpenAIClient;
 use AiHeadlines\Storage\TitlesRepository;
 
 class Routes
 {
     private TitlesRepository $titlesRepository;
 
+    private OpenAIClient $client;
+
     public function __construct()
     {
         $this->titlesRepository = new TitlesRepository();
+        $this->client = new OpenAIClient(get_option('ai_openai_api_key'));
     }
 
     public function register()
@@ -47,9 +50,10 @@ class Routes
             wp_send_json_error('Neplatné ID článku.');
         }
 
+        $force = isset($_POST['force']) ? boolval($_POST['force']) : false;
         $existing = $this->titlesRepository->getByPostId($post_id);
 
-        if ($existing) {
+        if ($existing && !$force) {
             wp_send_json_success([
                 'topic' => $existing->topic,
                 'titles' => json_decode($existing->titles),
@@ -57,10 +61,10 @@ class Routes
         }
 
         $content = get_post_field('post_content', $post_id);
-        $client = new OpenAIClient(get_option('ai_openai_api_key'));
-        $response = $client->generateTitles($content);
+        $response = $this->client->generateTitles($content);
 
         if (isset($response['titles']) && isset($response['topic']) && count($response['titles']) > 0) {
+            $this->titlesRepository->deleteByPostId($post_id);
             $this->titlesRepository->save($post_id, $response);
         }
 

@@ -4,8 +4,7 @@ namespace AiHeadlines\Utils;
 
 class HeadlinePlaceHolder
 {
-    // Generuje placeholder topic a titles
-    public static function generate(): array
+    public function generate(): array
     {
         return [
             'topic' => 'Sample Topic',

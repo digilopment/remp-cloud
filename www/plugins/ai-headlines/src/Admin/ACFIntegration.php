@@ -31,7 +31,13 @@ class ACFIntegration
         }
 
         $nonce = wp_create_nonce('ai_headlines');
+        echo '<div style="display:flex; align-items:center; gap:10px;">';
         echo '<button id="ai-headlines" data-nonce="' . $nonce . '" class="button button-primary">Navrhnúť AI nadpisy</button>';
+        echo '<label style="display:flex; align-items:center; gap:5px;">';
+        echo '<input type="checkbox" id="ai-headlines-force" data-nonce="' . $nonce . '" name="ai_headlines_force" value="1">';
+        echo 'Navrhnúť nové';
+        echo '</label>';
+        echo '</div>';
         echo '<div id="ai-headlines-output" style="margin-top:10px;"></div>';
     }
 
