@@ -1,0 +1,30 @@
+
+#ai_headlines_box .ai-titles-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+
+#ai_headlines_box .ai-title-item {
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+#ai_headlines_box .ai-title-item:hover {
+    background: #e2e8f0;
+    transform: translateX(3px);
+}
+
+#ai_headlines_box .ai-error {
+    color: #e53e3e;
+    font-weight: bold;
+}
+
+#ai_headlines_box .handle-order-lower,
+#ai_headlines_box .handle-order-higher{
+    display:none;
+}

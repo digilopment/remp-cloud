@@ -111,11 +111,11 @@ function attach_random_image($post_id)
 for ($i = 1; $i <= $post_count; $i++) {
     $title = "Článok č. $i";
     $content = fake_article(rand(3, 6));
-
+    $status = ($i % 10 === 0) ? 'draft' : 'publish';
     $post_id = wp_insert_post([
         'post_title' => $title,
         'post_content' => $content,
-        'post_status' => 'publish',
+        'post_status' => $status,
         'post_type' => 'post',
         'post_author' => 1,
     ]);
