@@ -9,11 +9,7 @@ wp() {
         return 1
     fi
 
-    docker exec -it wordpress-cloud-php bash -c "
-    cd /var/www/html/wordpress && \
-    $cmd
-    "
+    docker exec -i wordpress-cloud-php bash -c "cd /var/www/html/wordpress && $cmd --allow-root"
 }
 
-# --- Volanie ---
 wp "$1"
