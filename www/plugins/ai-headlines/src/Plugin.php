@@ -11,12 +11,12 @@ use WP_CLI;
 
 class Plugin
 {
-    public function init()
+    public function init(): void
     {
         add_action('init', [$this, 'register_hooks']);
     }
 
-    public function register_hooks()
+    public function register_hooks(): void
     {
         (new AdminUI())->register();
         (new ACFIntegration())->register();
@@ -24,6 +24,7 @@ class Plugin
         (new AdminSettings())->register();
 
         if (defined('WP_CLI') && WP_CLI) {
+            /** @phpstan-ignore-next-line */
             WP_CLI::add_command('ai-headlines', new GenerateTitlesCommand());
         }
     }

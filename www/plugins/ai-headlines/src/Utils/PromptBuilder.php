@@ -11,7 +11,7 @@ class PromptBuilder
         $this->placeholder = new HeadlinePlaceHolder();
     }
 
-    public function build($content): string
+    public function build(string $content): string
     {
         $jsonTemplate = $this->placeholder->generate();
         $prompt = "Analyzuj nasledujúci článok a odpovedz vo formáte JSON presne podľa ukážky nižšie. Identifikuj hlavnú tému článku a navrhni 3–5 SEO-priateľských titulkov.\n";

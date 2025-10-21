@@ -28,7 +28,7 @@ class TitlesRepository
         $table = $wpdb->prefix . self::TABLE_NAME;
         $charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE IF NOT EXISTS $table (
+        $sql = "CREATE TABLE IF NOT EXISTS {$table} (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             post_id BIGINT UNSIGNED NOT NULL,
             topic TEXT,
@@ -47,12 +47,24 @@ class TitlesRepository
         $wpdb->query("DROP TABLE IF EXISTS {$table}");
     }
 
+    /**
+     * @param int $postId
+     * @return object|null object with properties `topic` and `titles`
+     */
     public function getByPostId(int $postId): ?object
     {
-        $table = $this->getTableName();
-        return $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM {$table} WHERE post_id = %d LIMIT 1", $postId));
+        $table = (string) $this->getTableName();
+        $query = 'SELECT * FROM ' . $table . ' WHERE post_id = %d LIMIT 1';
+        /** @phpstan-ignore-next-line */
+        $row = $this->wpdb->get_row($this->wpdb->prepare($query, $postId));
+
+        return $row;
     }
 
+    /**
+     * @param int $postId
+     * @param array<string, mixed> $data
+     */
     public function save(int $postId, array $data): void
     {
         $this->wpdb->insert($this->getTableName(), [

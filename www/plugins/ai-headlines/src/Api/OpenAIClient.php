@@ -22,22 +22,29 @@ class OpenAIClient
         $this->promptBuilder = new PromptBuilder();
     }
 
-    public function generateTitles(string $content)
+    /**
+     * @param string $content
+     * @return array<string, mixed> alebo fallback HeadlinePlaceHolder output
+     */
+    public function generateTitles(string $content): array
     {
         if (empty($this->api_key)) {
             return $this->placeholder->generate();
         }
 
         $prompt = $this->promptBuilder->build($content);
+
+        $body_json = json_encode([
+            'model' => 'gpt-4o-mini',
+            'messages' => [['role' => 'user', 'content' => $prompt]],
+        ]) ?: '{}';
+
         $response = wp_remote_post($this->endpoint, [
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->api_key,
                 'Content-Type' => 'application/json',
             ],
-            'body' => json_encode([
-                'model' => 'gpt-4o-mini',
-                'messages' => [['role' => 'user', 'content' => $prompt]],
-            ]),
+            'body' => $body_json,
         ]);
 
         if (is_wp_error($response)) {
@@ -53,6 +60,6 @@ class OpenAIClient
             ];
         }
 
-        return $body;
+        return $body ?: [];
     }
 }

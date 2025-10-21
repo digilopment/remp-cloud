@@ -2,27 +2,22 @@
 
 namespace AiHeadlines\Admin;
 
+use WP_Post;
+
 class ACFIntegration
 {
-
     const AVAILABLE_ARTICLE_STATES = [
-        'draft', // koncept, ešte nepublikovaný
-        //'publish', // zverejnený článok
-        //'pending', // čaká na schválenie
-        //'future', // plánované na publikovanie v budúcnosti
-        //'private', // súkromný článok
-        //'trash', // odstránený, v koši
-        'auto-draft', // automaticky uložený koncept
-        //'inherit', // dedí status od rodiča (napr. príloha)
+        'draft',
+        'auto-draft',
     ];
 
-    public function register()
+    public function register(): void
     {
         add_action('add_meta_boxes', [$this, 'add_ai_meta_box']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
     }
 
-    public function add_ai_meta_box()
+    public function add_ai_meta_box(): void
     {
         add_meta_box(
             'ai_headlines_box',
@@ -35,9 +30,9 @@ class ACFIntegration
         );
     }
 
-    public function render_meta_box($post)
+    public function render_meta_box(WP_Post $post): void
     {
-        if (in_array($post->post_status, self::AVAILABLE_ARTICLE_STATES)) {
+        if (in_array($post->post_status, self::AVAILABLE_ARTICLE_STATES, true)) {
             $nonce = wp_create_nonce('ai_headlines');
             echo '<div style="display:flex; align-items:center; gap:10px;">';
             echo '<button id="ai-headlines" data-nonce="' . $nonce . '" class="button button-primary">Navrhnúť AI nadpisy</button>';
@@ -48,13 +43,11 @@ class ACFIntegration
             echo '</div>';
             echo '<div id="ai-headlines-output" style="margin-top:10px;"></div>';
         }
-        //echo '<p>AI tlačidlo sa zobrazí len pre koncepty.</p>';
-        return;
     }
 
-    public function enqueue_scripts($hook)
+    public function enqueue_scripts(string $hook): void
     {
-        if (!in_array($hook, ['post.php', 'post-new.php'])) {
+        if (!in_array($hook, ['post.php', 'post-new.php'], true)) {
             return;
         }
 

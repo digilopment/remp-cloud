@@ -4,6 +4,9 @@ namespace AiHeadlines\Utils;
 
 class HeadlinePlaceHolder
 {
+    /**
+     * @return array{topic: string, titles: string[]}
+     */
     public function generate(): array
     {
         return [

@@ -17,13 +17,13 @@ class Routes
         $this->client = new OpenAIClient(get_option('ai_openai_api_key'));
     }
 
-    public function register()
+    public function register(): void
     {
         add_action('wp_ajax_ai_headlines', [$this, 'getHeadlines']);
         add_action('wp_ajax_ai_set_title', [$this, 'setHeadline']);
     }
 
-    public function setHeadline()
+    public function setHeadline(): void
     {
         check_ajax_referer('ai_headlines', 'nonce');
 
@@ -41,7 +41,7 @@ class Routes
         }
     }
 
-    public function getHeadlines()
+    public function getHeadlines(): void
     {
         check_ajax_referer('ai_headlines', 'nonce');
 
@@ -54,9 +54,10 @@ class Routes
         $existing = $this->titlesRepository->getByPostId($post_id);
 
         if ($existing && !$force) {
+            /** @var object{topic: string, titles: string} $existing */
             wp_send_json_success([
                 'topic' => $existing->topic,
-                'titles' => json_decode($existing->titles),
+                'titles' => json_decode($existing->titles, true) ?: [],
             ]);
         }
 

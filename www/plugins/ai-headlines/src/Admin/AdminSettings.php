@@ -4,24 +4,21 @@ namespace AiHeadlines\Admin;
 
 class AdminSettings
 {
-
     const OPTION_NAME = 'ai_openai_api_key';
 
-    public function register()
+    public function register(): void
     {
         add_action('admin_init', [$this, 'register_setting']);
     }
 
-    public function register_setting()
+    public function register_setting(): void
     {
-        // Registrácia option
         register_setting('general', self::OPTION_NAME, [
             'type' => 'string',
             'sanitize_callback' => 'sanitize_text_field',
             'default' => '',
         ]);
 
-        // Pridanie field do General settings
         add_settings_field(
             self::OPTION_NAME,
             'OpenAI API Key',
@@ -31,7 +28,7 @@ class AdminSettings
         );
     }
 
-    public function render_field()
+    public function render_field(): void
     {
         $value = get_option(self::OPTION_NAME, '');
         echo '<input type="text" id="' . self::OPTION_NAME . '" name="' . self::OPTION_NAME . '" value="' . esc_attr($value) . '" class="regular-text">';

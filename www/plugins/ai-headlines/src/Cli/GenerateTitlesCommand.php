@@ -9,14 +9,14 @@ use WP_CLI_Command;
 
 class GenerateTitlesCommand extends WP_CLI_Command
 {
-    protected $titlesRepo;
+    protected TitlesRepository $titlesRepo;
 
-    protected $client;
+    protected OpenAIClient $client;
 
     public function __construct()
     {
-        $api_key = get_option('ai_openai_api_key');
-        $this->client = new OpenAIClient($api_key);
+        $api_key = get_option('ai_openai_api_key', '');
+        $this->client = new OpenAIClient((string) $api_key);
         $this->titlesRepo = new TitlesRepository();
     }
 
@@ -33,17 +33,21 @@ class GenerateTitlesCommand extends WP_CLI_Command
      *
      * ## EXAMPLES
      *
-     *     wp ai-headlines generate all
-     *     wp ai-headlines generate 5
-     *     wp ai-headlines generate 12,34,56
+     *     wp ai-headlines generate all #all-articles
+     *     wp ai-headlines generate 5  #category
+     *     wp ai-headlines generate 5, #singl-article
+     *     wp ai-headlines generate 12,34,56 #articles
      *     wp ai-headlines generate all --renew
      *
      * @when after_wp_load
+     * @param array<int, string> $args
+     * @param array<string, mixed> $assoc_args
+     * @return void
      */
-    public function generate($args, $assoc_args)
+    public function generate(array $args, array $assoc_args): void
     {
         list($target) = $args;
-        $renew = isset($assoc_args['renew']);
+        $renew = isset($assoc_args['renew']) ? true : false;
 
         if ($target === 'all') {
             $posts = get_posts([
@@ -75,9 +79,8 @@ class GenerateTitlesCommand extends WP_CLI_Command
 
         foreach ($posts as $post) {
             $post_id = $post->ID;
-
             $existing = $this->titlesRepo->getByPostId($post_id);
-
+            
             if ($existing && !$renew) {
                 WP_CLI::log("Post ID {$post_id} already has titles. Skipping.");
                 continue;
@@ -85,10 +88,11 @@ class GenerateTitlesCommand extends WP_CLI_Command
 
             if ($existing && $renew) {
                 $this->titlesRepo->deleteByPostId($post_id);
+                
                 WP_CLI::log("Post ID {$post_id}: existing titles deleted (renew mode).");
             }
 
-            $post_content = $post->post_content ?: '';
+            $post_content = $post->post_content;
             $titles = $this->client->generateTitles($post_content);
 
             $this->titlesRepo->save($post_id, $titles);
@@ -96,6 +100,7 @@ class GenerateTitlesCommand extends WP_CLI_Command
             WP_CLI::success("Post ID {$post_id} processed and titles saved.");
         }
 
+        
         WP_CLI::success('All selected posts processed successfully.');
     }
 }

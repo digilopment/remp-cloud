@@ -4,19 +4,29 @@
 
 namespace Composer\Autoload;
 
-use Closure;
-
 class ComposerStaticInit63b88c3e917c4e6daa21a8f588a6be16
 {
+    public static $files = array (
+        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
-        'A' =>
+        'S' => 
+        array (
+            'SzepeViktor\\PHPStan\\WordPress\\' => 30,
+        ),
+        'A' => 
         array (
             'AiHeadlines\\' => 12,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'AiHeadlines\\' =>
+        'SzepeViktor\\PHPStan\\WordPress\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/szepeviktor/phpstan-wordpress/src',
+        ),
+        'AiHeadlines\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
@@ -28,10 +38,11 @@ class ComposerStaticInit63b88c3e917c4e6daa21a8f588a6be16
 
     public static function getInitializer(ClassLoader $loader)
     {
-        return Closure::bind(function () use ($loader) {
+        return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit63b88c3e917c4e6daa21a8f588a6be16::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit63b88c3e917c4e6daa21a8f588a6be16::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInit63b88c3e917c4e6daa21a8f588a6be16::$classMap;
+
         }, null, ClassLoader::class);
     }
 }

@@ -5,5 +5,7 @@
             "AiHeadlines\\": "src/"
         }
     },
-    "require": {}
+    "require-dev": {
+        "szepeviktor/phpstan-wordpress": "^2.0"
+    }
 }
