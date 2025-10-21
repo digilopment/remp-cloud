@@ -5,8 +5,9 @@
 - Podporuje hromadné generovanie nadpisov cez WP-CLI príkazy (wp ai-headlines generate).
 - Umožňuje nastavenie **OpenAI API kľúča cez administračné rozhranie**.
 - Používa AJAX na rýchle načítanie návrhov bez obnovy stránky.
-- Podporuje možnosť nového vygenerovania návrhov (suggestion headlines) pre konkrétny článok, ak je zaskrtnutý checkbox *vynúťiť*, inak načíta už vygenerované **headlines** ak sú.
+- Podporuje možnosť nového vygenerovania návrhov (suggestion headlines) pre konkrétny článok, ak je zaškrtnutý checkbox *vynúťiť*, inak načíta už vygenerované **headlines** ak sú.
 - Celkovo ide o nástroj na rýchle a automatizované generovanie SEO-friendly nadpisov pre články s flexibilitou pre opakované generovanie.
+- Kód je v súlade so štandardom PHPStan level 8 a PSR (PHP-FIG) coding standards
 
 ##### Webhooky
 ``` public function register()
