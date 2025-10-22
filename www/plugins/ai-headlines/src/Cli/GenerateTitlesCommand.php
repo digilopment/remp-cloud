@@ -80,7 +80,7 @@ class GenerateTitlesCommand extends WP_CLI_Command
         foreach ($posts as $post) {
             $post_id = $post->ID;
             $existing = $this->titlesRepo->getByPostId($post_id);
-            
+
             if ($existing && !$renew) {
                 WP_CLI::log("Post ID {$post_id} already has titles. Skipping.");
                 continue;
@@ -88,7 +88,7 @@ class GenerateTitlesCommand extends WP_CLI_Command
 
             if ($existing && $renew) {
                 $this->titlesRepo->deleteByPostId($post_id);
-                
+
                 WP_CLI::log("Post ID {$post_id}: existing titles deleted (renew mode).");
             }
 
@@ -100,7 +100,6 @@ class GenerateTitlesCommand extends WP_CLI_Command
             WP_CLI::success("Post ID {$post_id} processed and titles saved.");
         }
 
-        
         WP_CLI::success('All selected posts processed successfully.');
     }
 }

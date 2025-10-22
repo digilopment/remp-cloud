@@ -35,9 +35,9 @@ class OpenAIClient
         $prompt = $this->promptBuilder->build($content);
 
         $body_json = json_encode([
-            'model' => 'gpt-4o-mini',
-            'messages' => [['role' => 'user', 'content' => $prompt]],
-        ]) ?: '{}';
+                'model' => 'gpt-4o-mini',
+                'messages' => [['role' => 'user', 'content' => $prompt]],
+            ]) ?: '{}';
 
         $response = wp_remote_post($this->endpoint, [
             'headers' => [
@@ -60,6 +60,30 @@ class OpenAIClient
             ];
         }
 
-        return $body ?: [];
+        $contentResponse = $body['choices'][0]['message']['content'] ?? '';
+
+        return $this->parseAiResponse($contentResponse);
+    }
+
+    /**
+     * Vyčistí AI odpoveď (odstráni ```json bloky) a dekóduje JSON.
+     *
+     * @param string $responseContent
+     * @return array<string, mixed>
+     */
+    private function parseAiResponse(string $responseContent): array
+    {
+        $clean = trim($responseContent);
+        $clean = preg_replace('/^```[a-zA-Z]*\s*/', '', $clean);
+        $clean = str_replace('```', '', (string)$clean);
+        $clean = trim($clean);
+
+        $parsed = json_decode($clean, true);
+
+        if (json_last_error() === JSON_ERROR_NONE && isset($parsed['titles'])) {
+            return $parsed;
+        }
+
+        return $this->placeholder->generate();
     }
 }
