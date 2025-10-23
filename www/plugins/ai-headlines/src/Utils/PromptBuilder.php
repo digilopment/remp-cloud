@@ -19,7 +19,7 @@ class PromptBuilder
         $prompt .= json_encode($jsonTemplate, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $prompt .= "\n\nObsah článku:\n\n" . strip_tags($content);
         $body_json = json_encode([
-                'model' => 'gpt-4o-mini',
+                'model' => get_option('ai_model'),
                 'messages' => [
                     ['role' => 'system', 'content' => 'Tvoja jediná úloha je vrátiť validný JSON podľa špecifikovanej štruktúry.'],
                     ['role' => 'user', 'content' => $prompt],
