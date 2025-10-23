@@ -33,18 +33,12 @@ class OpenAIClient
         }
 
         $prompt = $this->promptBuilder->build($content);
-
-        $body_json = json_encode([
-                'model' => 'gpt-4o-mini',
-                'messages' => [['role' => 'user', 'content' => $prompt]],
-            ]) ?: '{}';
-
         $response = wp_remote_post($this->endpoint, [
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->api_key,
                 'Content-Type' => 'application/json',
             ],
-            'body' => $body_json,
+            'body' => $prompt,
         ]);
 
         if (is_wp_error($response)) {
