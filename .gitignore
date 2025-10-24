@@ -1,2 +1,14 @@
-volumes/*
-www/wordpress*
+.idea
+.vscode
+.history
+.env
+*.sublime-project
+*.sublime-workspace
+.metadata
+
+docker-compose.override.yml
+.yarn-error.log
+.DS_Store
+# gdrive oath for sample data
+.virtualenv
+client_secrets.json
