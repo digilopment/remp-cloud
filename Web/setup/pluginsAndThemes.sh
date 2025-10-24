@@ -23,5 +23,7 @@ fi
 bash wp.sh "wp plugin install generate-child-theme --activate"
 bash wp.sh "wp plugin activate ai-headlines"
 
+bash wp.sh "wp plugin install classic-editor --activate"
+
 #bash add.sh plugin https://downloads.wordpress.org/plugin/woocommerce-services.latest-stable.zip
 #bash add.sh plugin https://downloads.wordpress.org/plugin/woocommerce-payments.latest-stable.zip

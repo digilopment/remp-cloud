@@ -25,6 +25,8 @@ $settings = [
     'mailserver_login'    => getenv('MAILSERVER_LOGIN'),
     'mailserver_pass'     => getenv('MAILSERVER_PASS'),
     'mailserver_port'     => getenv('MAILSERVER_PORT'),
+    'classic-editor-replac'          => 'classic',
+    'classic-editor-allow-users'          => '0',
     'ping_sites'          => '',
     'logo_url'            => getenv('LOGO_URL') ?: 'https://dummyimage.com/400x100/ff6600/ffffff.png&text=' . urlencode(getenv('TITLE')),
     'favicon_url'         => getenv('FAVICON_URL') ?: 'https://github.githubassets.com/favicons/favicon.png',
