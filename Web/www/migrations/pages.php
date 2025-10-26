@@ -25,6 +25,10 @@ $pages = [
         "content" => "Všeobecné podmienky používania nášho webu.",
         "children" => []
     ],
+    "Profil" => [
+        "content" => "",
+        "children" => []
+    ],
 ];
 
 // --- WooCommerce systémové stránky ---

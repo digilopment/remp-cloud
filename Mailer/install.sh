@@ -8,13 +8,11 @@ yarn install
 yarn install --no-bin-links
 
 # 3. Generate assets
-yarn run all-dev // or any other alternative defined within package.json
+make js
 
 # 4. Run migrations
-php artisan migrate
+php bin/command.php migrate:migrate
 
-# 5. Generate app key
-php artisan key:generate
-
-# 6. Run seeders (optional)
-php artisan db:seed
+# 5. Run seeders
+php bin/command.php db:seed
+php bin/command.php demo:seed # optional

@@ -1,5 +1,5 @@
 # 1. Download PHP dependencies
-composer install
+composer install --no-interaction --no-progress --no-ansi
 
 # 2. Download JS/HTML dependencies
 yarn install

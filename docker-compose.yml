@@ -58,7 +58,7 @@ services:
     container_name: ${PROJECT_NAME}-mysql
     image: "mysql:8.0"
     volumes:
-      - "mysql-data:/var/lib/mysql"
+      - "./volumes/mysql:/var/lib/mysql"
       - "./Docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql"
     command:
       - "--character-set-server=utf8mb4"
@@ -337,8 +337,6 @@ services:
 
 volumes:
   kafka-data:
-    driver: "local"
-  mysql-data:
     driver: "local"
   redis-data:
     driver: "local"

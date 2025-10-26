@@ -12,3 +12,4 @@ docker-compose.override.yml
 # gdrive oath for sample data
 .virtualenv
 client_secrets.json
+volumes/
