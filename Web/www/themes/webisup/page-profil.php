@@ -3,8 +3,6 @@
 
 use App\Controllers\RempSsoController;
 
-
-
 $controller = new RempSsoController();
 $controller->handleRequest();
 get_header();

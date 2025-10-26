@@ -1,0 +1,63 @@
+#!/bin/bash
+
+#create .env from env.sample
+if [ -e ./.env ]; then
+    echo "ENV file was found"
+else
+    cp ./env.sample .env
+    echo "ENV file was created from env.sample"
+fi
+
+#include environment
+. ./.env
+
+# Check if parameters are passed to run directly
+if [ -n "$1" ]; then
+    # Run the specified container directly
+    containerId=$(docker ps --filter "network=${PROJECT_NAME}-network" --filter "name=$1" --format "{{.ID}}")
+
+    if [ -n "$containerId" ]; then
+        # If $2 is not set, default to bash
+        shellType=${2:-bash}
+
+        # Execute the selected shell inside the container
+        docker exec -it "$containerId" /bin/$shellType
+    else
+        echo "Container '$1' not found."
+        exit 1
+    fi
+else
+    # Print headers for the table
+    printf "%-5s %-30s %-40s %-20s %-15s\n" "No" "Container Name" "Image" "ID" "IP Address"
+
+    # Initialize counter
+    counter=1
+    docker ps --filter "name=^/${PROJECT_NAME}-" --format "{{.ID}}" | while read containerId; do
+        containerName=$(docker inspect -f '{{.Name}}' "$containerId" | sed 's/\///') # Remove leading '/'
+        image=$(docker inspect -f '{{.Config.Image}}' "$containerId" | cut -c 1-40)  # Limit image to 40 chars
+        ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$containerId")
+
+        # Print the container details in aligned columns
+        printf "%-5s %-30s %-40s %-20s %-15s\n" "$counter" "$containerName" "$image" "$containerId" "$ip"
+        counter=$((counter + 1))
+    done
+
+    # Ask for user selection
+    echo 'Please enter the number of the container to access (1-n):'
+    read choice
+
+    # Get the container ID based on the user's choice
+    containerId=$(docker ps --filter "network=${PROJECT_NAME}-network" --format "{{.ID}}" | sed -n "${choice}p")
+
+    if [ -n "$containerId" ]; then
+        # Ask whether to use /bin/sh or /bin/bash
+        echo "Enter shell type (sh/bash):"
+        read shellType
+        shellType=${shellType:-bash}  # Default to bash if not provided
+        
+        docker exec -it "$containerId" /bin/$shellType
+    else
+        echo "Invalid selection, exiting."
+        exit 1
+    fi
+fi
