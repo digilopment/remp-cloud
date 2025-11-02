@@ -7,6 +7,7 @@ CONTAINER="${PROJECT_NAME}-mailer"
 APP_DIR="Mailer"   # cesta v kontejnere, kde je aplikácia
 
 cp config/.env ../../apps/$APP_DIR/.env
+cp config/config.local.neon ../../apps/$APP_DIR/app/config/config.local.neon
 
 echo "Spúšťam inštaláciu Mailer CRM cez Docker ($CONTAINER)..."
 
