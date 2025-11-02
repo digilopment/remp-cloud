@@ -1,0 +1,32 @@
+# This is example of local config which is loaded after main config.neon
+# if environmnent variable `CRM_ENV` is set to `local`.
+# You can append or override all settings from main config here.
+# For more details see: https://doc.nette.org/en/2.4/configuring
+
+extensions:
+	autowired: Kdyby\Autowired\DI\AutowiredExtension
+
+local_configs:
+	site_title: DEVEL CRM
+	site_description: Development instance of CRM
+
+# override translation settings if needed
+# translation:
+#	default: sk_SK
+#	fallback!: [sk_SK, cs_CZ, en_US]
+
+services:
+	applicationConfig:
+		setup:
+			- setCacheExpiration(0)
+
+	# Attaching populators run by command application:populate
+	populator:
+		factory: Crm\ApplicationModule\Commands\PopulatorCommand
+		setup:
+			- addSeeder(Crm\ApiModule\Populators\ApiTokensPopulator('ApiTokensPopulator', 5))
+			- addSeeder(Crm\AdminModule\Populators\AuditLogsPopulator('AuditLogsPopulator', 50))
+			- addSeeder(Crm\UsersModule\Populators\GroupsPopulator('Groups', 3))
+			- addSeeder(Crm\UsersModule\Populators\UsersPopulator('User', 50))
+			- addSeeder(Crm\UsersModule\Populators\AutologinPopulator('Groups', 200))
+			- addSeeder(Crm\SubscriptionsModule\Populators\SubscriptionsPopulator('Subscriptions', 300))

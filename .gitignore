@@ -13,3 +13,6 @@ docker-compose.override.yml
 .virtualenv
 client_secrets.json
 volumes/
+apps/
+apps2/
+/nbproject/private/

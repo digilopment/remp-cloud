@@ -1,7 +1,0 @@
-gen/
-example/
-client/
-tool/
-goa/
-tracker*
-data/bindata.go

@@ -1,0 +1,348 @@
+version: "3.8"
+services:
+  nginx:
+    container_name: startitup-cloud-nginx
+    image: nginx:stable
+    environment:
+      NGINX_PORT: '[::]:80'
+    ports:
+    - 80:80
+    volumes:
+    - ../apps/:/var/www/html:rw
+    - ./images/nginx/nginx.conf:/etc/nginx/conf.d/default.template:ro
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - service nginx status || exit 1
+      timeout: 2s
+      retries: 10
+      interval: 5s
+    restart: unless-stopped
+    networks:
+      startitup-cloud-network:
+        aliases:
+        - campaign.remp.press
+        - mailer.remp.press
+        - sso.remp.press
+        - beam.remp.press
+        - tracker.beam.remp.press
+        - segments.beam.remp.press
+        - mailhog.remp.press
+        - crm.remp.press
+        - webisup.loc
+        - kibana.beam.remp.press
+    command: /bin/bash -c "envsubst '$$NGINX_PORT' < /etc/nginx/conf.d/default.template
+      > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+  proxyx:
+    container_name: startitup-cloud-proxyx
+    build:
+      context: ./images/proxyx
+    ports:
+    - 443:443
+    expose:
+    - "80"
+    restart: always
+    networks:
+    - startitup-cloud-network
+  phpmyadmin:
+    container_name: startitup-cloud-phpmyadmin
+    image: phpmyadmin
+    restart: always
+    environment:
+      PMA_ARBITRARY: "1"
+      UPLOAD_LIMIT: 2048M
+    networks:
+    - startitup-cloud-network
+  mysql:
+    container_name: startitup-cloud-mysql
+    image: mysql:8.0
+    volumes:
+    - ./volumes/mysql:/var/lib/mysql
+    - ./images/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command:
+    - --character-set-server=utf8mb4
+    - --collation-server=utf8mb4_unicode_ci
+    - --skip-character-set-client-handshake
+    - --explicit_defaults_for_timestamp
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_ROOT_PASSWORD: secret
+    healthcheck:
+      test:
+      - CMD
+      - mysqladmin
+      - ping
+      - -h
+      - localhost
+      timeout: 2s
+      retries: 10
+      interval: 5s
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  redis:
+    container_name: startitup-cloud-redis
+    image: redis:6.2
+    volumes:
+    - redis-data:/data
+    healthcheck:
+      test:
+      - CMD
+      - redis-cli
+      - --raw
+      - incr
+      - ping
+      timeout: 2s
+      retries: 10
+      interval: 5s
+    networks:
+    - startitup-cloud-network
+  mailhog:
+    container_name: startitup-cloud-mailhog
+    image: mailhog/mailhog:v1.0.0
+    environment:
+      MH_HOSTNAME: mailhog.remp.press
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  zookeeper:
+    container_name: startitup-cloud-zookeeper
+    image: wurstmeister/zookeeper
+    hostname: zookeeper
+    ports:
+    - 2181:2181
+    healthcheck:
+      test:
+      - CMD
+      - nc
+      - -z
+      - localhost
+      - "2181"
+      timeout: 2s
+      retries: 10
+      interval: 5s
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  kafka:
+    container_name: startitup-cloud-kafka
+    image: wurstmeister/kafka
+    hostname: kafka
+    ports:
+    - 9092:9092
+    depends_on:
+    - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: beam_events:1:1
+      KAFKA_BROKER_ID: "1001"
+      KAFKA_RESERVED_BROKER_MAX_ID: "1001"
+    volumes:
+    - kafka-data:/data
+    healthcheck:
+      test: nc -z localhost 9092
+      timeout: 2s
+      retries: 10
+      interval: 5s
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  elasticsearch:
+    container_name: startitup-cloud-elasticsearch
+    build: ./images/elasticsearch
+    volumes:
+    - ./images/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    - elastic-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: curl -s http://localhost:9200 >/dev/null || exit 1
+      timeout: 2s
+      retries: 10
+      interval: 5s
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  kibana:
+    container_name: startitup-cloud-kibana
+    image: docker.elastic.co/kibana/kibana:8.6.1
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  telegraf:
+    container_name: startitup-cloud-telegraf
+    build: ./images/telegraf
+    volumes:
+    - ./images/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  beam_tracker:
+    container_name: startitup-cloud-beam_tracker
+    build: ../apps/Beam/go/cmd/tracker
+    depends_on:
+    - zookeeper
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  beam_segments:
+    container_name: startitup-cloud-beam_segments
+    build: ../apps/Beam/go/cmd/segments
+    depends_on:
+    - elasticsearch
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  crm:
+    container_name: startitup-cloud-crm
+    user: 1000:1000
+    build:
+      context: ../apps/Crm/docker/php
+      args:
+        UID: 1000
+        GID: 1000
+        UNAME: docker
+    volumes:
+    - ../apps/Crm:/var/www/html/Crm:rw
+    - ../apps/Composer:/var/www/html/Composer:rw
+    - ../apps/Package:/var/www/html/Package:rw
+    depends_on:
+      nginx:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  web:
+    container_name: startitup-cloud-web
+    user: 1000:1000
+    build:
+      context: ../apps/Web/docker/php
+      args:
+        UID: 1000
+        GID: 1000
+        UNAME: docker
+    volumes:
+    - ../apps/Web:/var/www/html/Web:rw
+    - ../apps/Composer:/var/www/html/Composer:rw
+    - ../apps/Package:/var/www/html/Package:rw
+    depends_on:
+      nginx:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  campaign:
+    container_name: startitup-cloud-campaign
+    user: 1000:1000
+    build:
+      context: ./images/php
+      args:
+        UID: 1000
+        GID: 1000
+        UNAME: docker
+    volumes:
+    - ../apps/Campaign:/var/www/html/Campaign:rw
+    - ../apps/Composer:/var/www/html/Composer:rw
+    - ../apps/Package:/var/www/html/Package:rw
+    depends_on:
+      nginx:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  mailer:
+    container_name: startitup-cloud-mailer
+    user: 1000:1000
+    build:
+      context: ./images/php
+      args:
+        UID: 1000
+        GID: 1000
+        UNAME: docker
+    volumes:
+    - ../apps/Mailer:/var/www/html/Mailer:rw
+    - ../apps/Composer:/var/www/html/Composer:rw
+    - ../apps/Package:/var/www/html/Package:rw
+    depends_on:
+      nginx:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  sso:
+    container_name: startitup-cloud-sso
+    user: 1000:1000
+    build:
+      context: ./images/php
+      args:
+        UID: 1000
+        GID: 1000
+        UNAME: docker
+    volumes:
+    - ../apps/Sso:/var/www/html/Sso:rw
+    - ../apps/Composer:/var/www/html/Composer:rw
+    - ../apps/Package:/var/www/html/Package:rw
+    depends_on:
+      nginx:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+  beam:
+    container_name: startitup-cloud-beam
+    user: 1000:1000
+    build:
+      context: ./images/php
+      args:
+        UID: 1000
+        GID: 1000
+        UNAME: docker
+    volumes:
+    - ../apps/Beam:/var/www/html/Beam:rw
+    - ../apps/Composer:/var/www/html/Composer:rw
+    - ../apps/Package:/var/www/html/Package:rw
+    depends_on:
+      nginx:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+    - startitup-cloud-network
+volumes:
+  kafka-data:
+    driver: local
+  redis-data:
+    driver: local
+  elastic-data:
+    driver: local
+networks:
+  startitup-cloud-network:
+    driver: bridge
+...
