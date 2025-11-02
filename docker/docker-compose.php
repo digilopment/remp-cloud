@@ -223,11 +223,20 @@ $phpApps = [
 ];
 
 foreach ($phpApps as $name => $path) {
+    
+    
+    if(ucfirst($name) == 'Web'){
+        $dockerPath = '../apps/' . ucfirst($name) . '/images/php';
+    }elseif(ucfirst($name) == 'Crm'){
+        $dockerPath = '../apps/' . ucfirst($name) . '/docker/php';
+    }else{
+        $dockerPath = './images/php';
+    }
     $config['services'][$name] = [
         'container_name' => "${projectName}-${name}",
         'user' => "${uid}:${gid}",
         'build' => [
-            'context' => (in_array($name, ['web', 'crm'])) ? "../apps/" . ucfirst($name) . "/docker/php" : './images/php',
+            'context' => $dockerPath,
             'args' => [
                 'UID' => $uid,
                 'GID' => $gid,

@@ -4,6 +4,7 @@ set -e
 CURRENT_DIR="$PWD"
 
 cd setup && bash clone.sh
+cd $CURRENT_DIR && cp sites-deployer/Crm/config/Dockerfile apps/Crm/docker/php/Dockerfile
 cd $CURRENT_DIR/docker && make docker-build
 docker compose build
 docker compose up -d

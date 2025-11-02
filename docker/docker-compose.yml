@@ -224,7 +224,7 @@ services:
     container_name: startitup-cloud-web
     user: 1000:1000
     build:
-      context: ../apps/Web/docker/php
+      context: ../apps/Web/images/php
       args:
         UID: 1000
         GID: 1000
