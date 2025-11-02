@@ -13,6 +13,6 @@ sleep 15
 cd $CURRENT_DIR/sites-deployer/Beam && bash install.sh
 cd $CURRENT_DIR/sites-deployer/Campaign && bash install.sh
 cd $CURRENT_DIR/sites-deployer/Crm && bash install.sh
-cd $CURRENT_DIR/sites-deployer/Mailer && bash install.sh
 cd $CURRENT_DIR/sites-deployer/Sso && bash install.sh
 cd $CURRENT_DIR/sites-deployer/Web && bash install.sh
+cd $CURRENT_DIR/sites-deployer/Mailer && bash install.sh
