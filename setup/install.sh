@@ -37,20 +37,23 @@ for APP in "${APPS[@]}"; do
 done
 
 cd "$CURRENT_DIR"
-CRM_REPO="https://github.com/remp2020/crm-skeleton.git"
 CRM_DIR="$TARGET_DIR/Crm"
-git clone $CRM_REPO $CRM_DIR
+echo "Processing Crm..."
+if [ -d "$CRM_DIR" ]; then
+    echo "  Directory $CRM_DIR already exists, skipping..."
+else
+    git clone https://github.com/remp2020/crm-skeleton.git $CRM_DIR
+fi
 
 
 cd "$CURRENT_DIR"
-WORDPRESS_CLOUD_REPO="git@github.com:digilopment/wordpress-cloud.git"
 WEB_DIR="$TARGET_DIR/Web"
-# Odstránime /Web, ak existuje a chceme čistý clone
-rm -rf "$WEB_DIR"
-mkdir -p "$WEB_DIR"
-echo "Cloning wordpress-cloud directly into $WEB_DIR..."
-git clone "$WORDPRESS_CLOUD_REPO" "$WEB_DIR"
-echo "wordpress-cloud done."
+echo "Processing Web..."
+if [ -d "$WEB_DIR" ]; then
+    echo "  Directory $WEB_DIR already exists, skipping..."
+else
+    git clone git@github.com:digilopment/wordpress-cloud.git "$WEB_DIR"
+fi
 
 
 echo "All apps processed."

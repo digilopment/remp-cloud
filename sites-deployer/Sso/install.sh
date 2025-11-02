@@ -21,7 +21,6 @@ docker exec -it $CONTAINER bash -c "cd $APP_DIR && composer install --no-interac
 # 3. Inštalácia JS/HTML závislostí
 echo "Inštalujem JS/HTML balíčky..."
 docker exec -it $CONTAINER bash -c "cd $APP_DIR && yarn install"
-docker exec -it $CONTAINER bash -c "cd $APP_DIR && yarn install --no-bin-links"
 
 # 4. Generovanie assetov
 echo "Generujem assety..."
@@ -38,6 +37,6 @@ docker exec -it $CONTAINER bash -c "cd $APP_DIR && php artisan jwt:secret"
 
 # 7. Seed databázy (voliteľné)
 echo "Seedujem databázu..."
-docker exec -it $CONTAINER bash -c "cd $APP_DIR && php artisan db:seed --force || true"
+docker exec -it $CONTAINER bash -c "cd $APP_DIR && php artisan db:seed"
 
 echo "Hotovo! SSO CRM je pripravený."

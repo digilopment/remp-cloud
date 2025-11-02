@@ -21,7 +21,6 @@ docker exec -it $CONTAINER bash -c "cd $APP_DIR && composer install --no-interac
 # 3. Inštalácia JS/HTML závislostí
 echo "Inštalujem JS/HTML balíčky..."
 docker exec -it $CONTAINER bash -c "cd $APP_DIR && yarn install"
-docker exec -it $CONTAINER bash -c "cd $APP_DIR && yarn install --no-bin-links"
 
 # 4. Generovanie assetov
 echo "Generujem assety..."
