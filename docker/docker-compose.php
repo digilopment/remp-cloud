@@ -15,7 +15,7 @@ $config = [
     'version' => '3.8',
     'services' => [
         'nginx' => [
-            'container_name' => "${projectName}-nginx",
+            'container_name' => '${PROJECT_NAME}-nginx',
             'image' => 'nginx:stable',
             'environment' => ['NGINX_PORT' => '[::]:80'],
             'ports' => ['80:80'],
@@ -49,25 +49,25 @@ $config = [
             'command' => "/bin/bash -c \"envsubst '\$\$NGINX_PORT' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'\"",
         ],
         'proxyx' => [
-            'container_name' => "${projectName}-proxyx",
+            'container_name' => '${PROJECT_NAME}-proxyx',
             'build' => ['context' => './images/proxyx'],
             'ports' => ['443:443'],
             'expose' => ['80'],
             'restart' => 'always',
-            'networks' => ["${projectName}-network"],
+            'networks' => ['${PROJECT_NAME}-network'],
         ],
         'phpmyadmin' => [
-            'container_name' => "${projectName}-phpmyadmin",
+            'container_name' => '${PROJECT_NAME}-phpmyadmin',
             'image' => 'phpmyadmin',
             'restart' => 'always',
             'environment' => [
                 'PMA_ARBITRARY' => '1',
                 'UPLOAD_LIMIT' => '2048M',
             ],
-            'networks' => ["${projectName}-network"],
+            'networks' => ['${PROJECT_NAME}-network'],
         ],
         'mysql' => [
-            'container_name' => "${projectName}-mysql",
+            'container_name' => '${PROJECT_NAME}-mysql',
             'image' => 'mysql:8.0',
             'volumes' => [
                 './volumes/mysql:/var/lib/mysql',
@@ -90,10 +90,10 @@ $config = [
                 'interval' => '5s',
             ],
             'restart' => 'unless-stopped',
-            'networks' => ["${projectName}-network"],
+            'networks' => ['${PROJECT_NAME}-network'],
         ],
         'redis' => [
-            'container_name' => "${projectName}-redis",
+            'container_name' => '${PROJECT_NAME}-redis',
             'image' => 'redis:6.2',
             'volumes' => ['redis-data:/data'],
             'healthcheck' => [
@@ -102,14 +102,14 @@ $config = [
                 'retries' => 10,
                 'interval' => '5s',
             ],
-            'networks' => ["${projectName}-network"],
+            'networks' => ['${PROJECT_NAME}-network'],
         ],
         'mailhog' => [
-            'container_name' => "${projectName}-mailhog",
+            'container_name' => '${PROJECT_NAME}-mailhog',
             'image' => 'mailhog/mailhog:v1.0.0',
             'environment' => ['MH_HOSTNAME' => 'mailhog.remp.press'],
             'restart' => 'unless-stopped',
-            'networks' => ["${projectName}-network"],
+            'networks' => ['${PROJECT_NAME}-network'],
         ],
     ],
     'volumes' => [
@@ -123,7 +123,7 @@ $config = [
 ];
 $extraServices = [
     'zookeeper' => [
-        'container_name' => "${projectName}-zookeeper",
+        'container_name' => '${PROJECT_NAME}-zookeeper',
         'image' => 'wurstmeister/zookeeper',
         'hostname' => 'zookeeper',
         'ports' => ['2181:2181'],
@@ -134,10 +134,10 @@ $extraServices = [
             'interval' => '5s',
         ],
         'restart' => 'unless-stopped',
-        'networks' => ["${projectName}-network"],
+        'networks' => ['${PROJECT_NAME}-network'],
     ],
     'kafka' => [
-        'container_name' => "${projectName}-kafka",
+        'container_name' => '${PROJECT_NAME}-kafka',
         'image' => 'wurstmeister/kafka',
         'hostname' => 'kafka',
         'ports' => ['9092:9092'],
@@ -157,10 +157,10 @@ $extraServices = [
             'interval' => '5s',
         ],
         'restart' => 'unless-stopped',
-        'networks' => ["${projectName}-network"],
+        'networks' => ['${PROJECT_NAME}-network'],
     ],
     'elasticsearch' => [
-        'container_name' => "${projectName}-elasticsearch",
+        'container_name' => '${PROJECT_NAME}-elasticsearch',
         'build' => './images/elasticsearch',
         'volumes' => [
             './images/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml',
@@ -173,16 +173,16 @@ $extraServices = [
             'interval' => '5s',
         ],
         'restart' => 'unless-stopped',
-        'networks' => ["${projectName}-network"],
+        'networks' => ['${PROJECT_NAME}-network'],
     ],
     'kibana' => [
-        'container_name' => "${projectName}-kibana",
+        'container_name' => '${PROJECT_NAME}-kibana',
         'image' => 'docker.elastic.co/kibana/kibana:8.6.1',
         'restart' => 'unless-stopped',
-        'networks' => ["${projectName}-network"],
+        'networks' => ['${PROJECT_NAME}-network'],
     ],
     'telegraf' => [
-        'container_name' => "${projectName}-telegraf",
+        'container_name' => '${PROJECT_NAME}-telegraf',
         'build' => './images/telegraf',
         'volumes' => [
             './images/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro',
@@ -192,21 +192,21 @@ $extraServices = [
             'kafka' => ['condition' => 'service_healthy'],
         ],
         'restart' => 'unless-stopped',
-        'networks' => ["${projectName}-network"],
+        'networks' => ['${PROJECT_NAME}-network'],
     ],
     'beam_tracker' => [
-        'container_name' => "${projectName}-beam_tracker",
+        'container_name' => '${PROJECT_NAME}-beam_tracker',
         'build' => '../apps/Beam/go/cmd/tracker',
         'depends_on' => ['zookeeper'],
         'restart' => 'unless-stopped',
-        'networks' => ["${projectName}-network"],
+        'networks' => ['${PROJECT_NAME}-network'],
     ],
     'beam_segments' => [
-        'container_name' => "${projectName}-beam_segments",
+        'container_name' => '${PROJECT_NAME}-beam_segments',
         'build' => '../apps/Beam/go/cmd/segments',
         'depends_on' => ['elasticsearch'],
         'restart' => 'unless-stopped',
-        'networks' => ["${projectName}-network"],
+        'networks' => ['${PROJECT_NAME}-network'],
     ],
 ];
 
@@ -233,7 +233,7 @@ foreach ($phpApps as $name => $path) {
         $dockerPath = './images/php';
     }
     $config['services'][$name] = [
-        'container_name' => "${projectName}-${name}",
+        'container_name' => '${PROJECT_NAME}-${name}',
         'user' => "${uid}:${gid}",
         'build' => [
             'context' => $dockerPath,
@@ -254,7 +254,7 @@ foreach ($phpApps as $name => $path) {
             'redis' => ['condition' => 'service_healthy'],
         ],
         'restart' => 'unless-stopped',
-        'networks' => ["${projectName}-network"],
+        'networks' => ['${PROJECT_NAME}-network'],
     ];
 }
 
