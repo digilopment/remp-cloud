@@ -40,3 +40,5 @@ echo "Seedujem databázu..."
 docker exec -it $CONTAINER bash -c "cd $APP_DIR && php artisan db:seed"
 
 echo "Hotovo! SSO CRM je pripravený."
+
+sed -i 's/return Str::random(40);/@session_start(); return session_id();/' ../../apps/Sso/vendor/laravel/framework/src/Illuminate/Session/Store.php
