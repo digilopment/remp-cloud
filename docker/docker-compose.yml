@@ -335,6 +335,29 @@ services:
     restart: unless-stopped
     networks:
     - ${PROJECT_NAME}-network
+  php-74-wp:
+    container_name: ${PROJECT_NAME}-php-74-wp
+    user: 1000:1000
+    build:
+      context: ../apps/Web/images/php-74
+      args:
+        UID: 1000
+        GID: 1000
+        UNAME: docker
+    volumes:
+    - ../apps/Web:/var/www/html/Web:rw
+    - ../apps/Composer:/var/www/html/Composer:rw
+    - ../apps/Package:/var/www/html/Package:rw
+    depends_on:
+      nginx:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+    - ${PROJECT_NAME}-network
 volumes:
   kafka-data:
     driver: local

@@ -258,6 +258,31 @@ foreach ($phpApps as $name => $path) {
     ];
 }
 
+$config['services']['php-74-wp'] = [
+        'container_name' => '${PROJECT_NAME}-php-74-wp',
+        'user' => "${uid}:${gid}",
+        'build' => [
+            'context' => '../apps/Web/images/php-74',
+            'args' => [
+                'UID' => $uid,
+                'GID' => $gid,
+                'UNAME' => $uname,
+            ],
+        ],
+        'volumes' => [
+            '../apps/Web:/var/www/html/Web:rw',
+            '../apps/Composer:/var/www/html/Composer:rw',
+            '../apps/Package:/var/www/html/Package:rw',
+        ],
+        'depends_on' => [
+            'nginx' => ['condition' => 'service_healthy'],
+            'mysql' => ['condition' => 'service_healthy'],
+            'redis' => ['condition' => 'service_healthy'],
+        ],
+        'restart' => 'unless-stopped',
+        'networks' => ['${PROJECT_NAME}-network'],
+    ];
+
 // convert to YAML
 function yamlEncode($data, $indent = 0): string
 {
