@@ -233,7 +233,7 @@ foreach ($phpApps as $name => $path) {
         $dockerPath = './images/php';
     }
     $config['services'][$name] = [
-        'container_name' => '${PROJECT_NAME}-${name}',
+        'container_name' => '${PROJECT_NAME}-'."${name}",
         'user' => "${uid}:${gid}",
         'build' => [
             'context' => $dockerPath,

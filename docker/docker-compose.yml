@@ -198,7 +198,7 @@ services:
     networks:
     - ${PROJECT_NAME}-network
   crm:
-    container_name: ${PROJECT_NAME}-${name}
+    container_name: ${PROJECT_NAME}-crm
     user: 1000:1000
     build:
       context: ../apps/Crm/docker/php
@@ -221,7 +221,7 @@ services:
     networks:
     - ${PROJECT_NAME}-network
   web:
-    container_name: ${PROJECT_NAME}-${name}
+    container_name: ${PROJECT_NAME}-web
     user: 1000:1000
     build:
       context: ../apps/Web/images/php
@@ -244,7 +244,7 @@ services:
     networks:
     - ${PROJECT_NAME}-network
   campaign:
-    container_name: ${PROJECT_NAME}-${name}
+    container_name: ${PROJECT_NAME}-campaign
     user: 1000:1000
     build:
       context: ./images/php
@@ -267,7 +267,7 @@ services:
     networks:
     - ${PROJECT_NAME}-network
   mailer:
-    container_name: ${PROJECT_NAME}-${name}
+    container_name: ${PROJECT_NAME}-mailer
     user: 1000:1000
     build:
       context: ./images/php
@@ -290,7 +290,7 @@ services:
     networks:
     - ${PROJECT_NAME}-network
   sso:
-    container_name: ${PROJECT_NAME}-${name}
+    container_name: ${PROJECT_NAME}-sso
     user: 1000:1000
     build:
       context: ./images/php
@@ -313,7 +313,7 @@ services:
     networks:
     - ${PROJECT_NAME}-network
   beam:
-    container_name: ${PROJECT_NAME}-${name}
+    container_name: ${PROJECT_NAME}-beam
     user: 1000:1000
     build:
       context: ./images/php
