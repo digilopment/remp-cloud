@@ -33,7 +33,7 @@ docker exec -it $CONTAINER bash -c "cd $APP_DIR && php artisan migrate --force"
 # 6. Generovanie app key a JWT secret
 echo "Generujem app key a JWT secret..."
 docker exec -it $CONTAINER bash -c "cd $APP_DIR && php artisan key:generate"
-docker exec -it $CONTAINER bash -c "cd $APP_DIR && php artisan jwt:secret"
+docker exec -it $CONTAINER bash -c "cd $APP_DIR && php artisan jwt:secret --force"
 
 # 7. Seed databázy (voliteľné)
 echo "Seedujem databázu..."

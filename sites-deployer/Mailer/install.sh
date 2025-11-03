@@ -32,7 +32,7 @@ echo "Spúšťam migrácie..."
 docker exec -it $CONTAINER bash -c "cd $APP_DIR && php bin/command.php migrate:migrate"
 
 # 6. Seed databázy
-echo "Seedujem databázu..."
-docker exec -it $CONTAINER bash -c "cd $APP_DIR && php bin/command.php db:seed"
+#echo "Seedujem databázu..."
+#docker exec -it $CONTAINER bash -c "cd $APP_DIR && php bin/command.php db:seed"
 
 echo "Hotovo! Mailer CRM je pripravený."
