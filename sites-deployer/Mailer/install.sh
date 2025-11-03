@@ -28,8 +28,8 @@ echo "Generujem assety..."
 docker exec -it $CONTAINER bash -c "cd $APP_DIR && make js"
 
 # 5. Spustenie migrácií
-echo "Spúšťam migrácie..."
-docker exec -it $CONTAINER bash -c "cd $APP_DIR && php bin/command.php migrate:migrate"
+#echo "Spúšťam migrácie..."
+#docker exec -it $CONTAINER bash -c "cd $APP_DIR && php bin/command.php migrate:migrate"
 
 # 6. Seed databázy
 #echo "Seedujem databázu..."
